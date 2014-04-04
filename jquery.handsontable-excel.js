@@ -1095,7 +1095,7 @@ function initExcelCell() {
   Handsontable.cellTypes.text = Handsontable._TextCell;
 
   orgtextcellrender = Handsontable.TextCell.renderer;
-  Handsontable.TextCell.renderer = Handsontable.ExcelRenderer;
+  Handsontable.TextCell.renderer = Handsontable.renderers.ExcelRenderer;
 }
 
 /**
@@ -1107,8 +1107,8 @@ Handsontable.TextCell = {
 */
 
 Handsontable._TextCell = {
-  renderer: Handsontable.TextRenderer,
-  editor: Handsontable.TextEditor
+  renderer: Handsontable.renderers.TextRenderer,
+  editor: Handsontable.editors.TextEditor
 };
 
 
@@ -1148,8 +1148,8 @@ Handsontable.NumericRenderer = function (instance, td, row, col, prop, value, ce
 // rewrite old numericrenderer so that it takes account for more different formats
 //
 
-var numericRenderer = Handsontable.NumericRenderer;
-Handsontable.NumericRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+var numericRenderer = Handsontable.renderers.NumericRenderer;
+Handsontable.renderers.NumericRenderer = function (instance, td, row, col, prop, value, cellProperties) {
   var myformat;
   if (typeof value === 'number') {
     if (typeof cellProperties.language !== 'undefined') {
@@ -1165,13 +1165,13 @@ Handsontable.NumericRenderer = function (instance, td, row, col, prop, value, ce
     td.className = 'htNumeric';
   } 
   else {
-    Handsontable.TextRenderer(instance, td, row, col, prop, value, cellProperties);
+    Handsontable.renderers.TextRenderer(instance, td, row, col, prop, value, cellProperties);
   } 
 };
 
 
 
-Handsontable.ExcelRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+Handsontable.renderers.ExcelRenderer = function (instance, td, row, col, prop, value, cellProperties) {
     var c;
     if (typeof value === 'undefined' || value === null || value == '') {
       Handsontable._TextCell.renderer.apply(this, arguments);
@@ -1248,15 +1248,14 @@ Handsontable.ExcelRenderer = function (instance, td, row, col, prop, value, cell
   };
 
 Handsontable.ExcelCell = {
-  renderer: Handsontable.ExcelRenderer,
-  editor: Handsontable.TextEditor,
+  renderer: Handsontable.renderers.ExcelRenderer,
+  editor: Handsontable.editors.TextEditor,
   dataType: 'excel'
 };
 
 // Add mapping of our type
 Handsontable.cellTypes['excel'] = Handsontable.ExcelCell;
 
-Handsontable.PluginHooks.push('afterInit', initExcelCell);
+Handsontable.PluginHooks.add('afterInit', initExcelCell);
 
 })(jQuery);
-
